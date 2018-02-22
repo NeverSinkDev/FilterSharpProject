@@ -22,6 +22,7 @@ namespace FilterSharp
     {
         public MainWindow()
         {
+            // test commit
             InitializeComponent();
         }
     }
