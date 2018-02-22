@@ -9,5 +9,6 @@ namespace FilterCore
     public class FilterEntry
     {
         // test commit
+        // more test commit
     }
 }
