@@ -10,6 +10,5 @@ namespace FilterCore
     {
         // test commit
         // more test commit
-        // even more
     }
 }
