@@ -46,7 +46,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FileUtils.cs" />
-    <Compile Include="LogManager\Class1.cs" />
     <Compile Include="LogManager\MessageHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
