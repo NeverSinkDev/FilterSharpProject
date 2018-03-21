@@ -25,12 +25,17 @@ namespace FilterCore
 
         // setter/getter
         //T GetValue<T>(FilterIdent ident); // normal getter for type/ident --> unnecessary because overload
-        T GetValue<T>(FilterIdent ident, int nr = 0); // get n-th value of given type
-        List<T> GetAllValues<T>(FilterIdent ident); // --> get ALL values for e.g. ItemLevel
-        int GetValueTypeCount<T>(FilterIdent ident); // --> how many e.g. ItemLevel lines this entry has
+        T GetValue<T>(int nr = 0); // get n-th value of given type
+        List<T> GetAllValues<T>(); // --> get ALL values for e.g. ItemLevel
+        int GetValueTypeCount<T>(); // --> how many e.g. ItemLevel lines this entry has
         // same for set
         // same for remove
         // "HasValue" --> ValueTypeCount != 0
+
+        // todo: where to put/save initial values?
+        // e.g. entry has initialValue: Class Currency
+        // now we "entry.RemoveLine(Class);"
+        // if the initValues are in the line or in the valueObj of the line, it would be lost at this point
 
         IList<T> GetValueOfType<T>();
         T GetValueOfTypeFirst<T>();

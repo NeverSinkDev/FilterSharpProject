@@ -13,6 +13,7 @@ namespace FilterCore
         IFilterValue Value { get; set; }
         // initialValue object?
         string Comment { get; set; } // maybe list of strings or something. for the commands/tags etc.
+        LineType LineType { get; }
 
         bool Equals(IFilterLine line);
         IFilterLine Clone();
@@ -23,5 +24,19 @@ namespace FilterCore
 
     public class FilterLine
     {
+
+        public FilterLine(string rawText)
+        {
+
+        }
+
+    }
+
+    public enum LineType
+    {
+        RuleStart,
+        RuleContent,
+        Filler,
+        Comment
     }
 }

@@ -20,5 +20,16 @@ namespace FilterCore
 
     public class Filter
     {
+        public Filter(string filePath)
+        {
+            var parser = new FilterParser();
+            //parser.ParseToEntryList()
+        }
+
+        public Filter(List<IFilterEntry> entryList)
+        {
+
+        }
+
     }
 }
