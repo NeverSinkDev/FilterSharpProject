@@ -7,11 +7,70 @@ using System.Threading.Tasks;
 
 namespace FilterCore
 {
-    public class FilterEntry
+    public class FilterEntry : IFilterEntry
     {
         // test commit
         // more test commit
         // whoops
+        public FilterEntry(EntryDataType type)
+        {
+            this.DataType = type;
+        }
+
+        public EntryDataType DataType { get; }
+        public int EntryID => throw new NotImplementedException();
+        public bool Enabled { get; set; }
+        public List<IFilterLine> LineList { get; set; }
+
+        public IFilterEntry Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> CompileToText()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFilterEntry line)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<T> GetAllValues<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetValue<T>(int nr = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IList<T> GetValueOfType<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetValueOfTypeAt<T>(int nr)
+        {
+            throw new NotImplementedException();
+        }
+
+        public T GetValueOfTypeFirst<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetValueTypeCount<T>()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
     }
 
     public interface IFilterEntry

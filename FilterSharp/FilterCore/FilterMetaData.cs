@@ -10,8 +10,21 @@
         FilterStyle Style { get; }
     }
 
+    //public class FilterIdentString
+    //{
+    //    private FilterIdentString(string value) { Value = value; }
+
+    //    public string Value { get; set; }
+
+    //    public static FilterIdentString Show { get { return new FilterIdentString("Show"); } }
+    //    public static FilterIdentString Hide { get { return new FilterIdentString("Hide"); } }
+
+    //}
+
     public enum FilterIdent // todo: sort for performance
     {
+        Show,
+        Hide,
         ItemLevel,
         DropLevel,
         Quality,

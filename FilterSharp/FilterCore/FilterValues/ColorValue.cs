@@ -37,14 +37,47 @@ namespace FilterCore.FilterValues
             throw new NotImplementedException();
         }
 
-        public void Reset()
-        {
-            throw new NotImplementedException();
-        }
-
         public void Validate()
         {
             throw new NotImplementedException();
         }
     }
+
+    // CONCRETE COLOR OBJECTS
+    // -> simply inheriting from ColorValue
+
+    public class TextColor : ColorValue
+    {
+        public TextColor(List<int> colors) : base(colors)
+        {
+        }
+
+        public TextColor(int r, int g, int b, int? a) : base(r, g, b, a)
+        {
+        }
+    }
+
+    public class BorderColor : ColorValue
+    {
+        public BorderColor(List<int> colors) : base(colors)
+        {
+        }
+
+        public BorderColor(int r, int g, int b, int? a) : base(r, g, b, a)
+        {
+        }
+    }
+
+    public class BackgroundColor : ColorValue
+    {
+        public BackgroundColor(List<int> colors) : base(colors)
+        {
+        }
+
+        public BackgroundColor(int r, int g, int b, int? a) : base(r, g, b, a)
+        {
+        }
+    }
+
+
 }

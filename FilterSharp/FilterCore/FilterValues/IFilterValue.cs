@@ -63,6 +63,5 @@ namespace FilterCore.FilterValues
 
         bool Equals(IFilterValue other);
         IFilterValue Clone();
-        void Reset();
     }
 }
