@@ -67,6 +67,7 @@
   <ItemGroup>
     <Compile Include="Filter.cs" />
     <Compile Include="FilterEntry.cs" />
+    <Compile Include="FilterHelper.cs" />
     <Compile Include="FilterLine.cs" />
     <Compile Include="FilterMetaData.cs" />
     <Compile Include="FilterParser.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="FilterValues\SoundValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\FilterLineTests.cs" />
+    <Compile Include="Tests\FilterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

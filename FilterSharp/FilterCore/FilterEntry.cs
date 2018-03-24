@@ -20,7 +20,7 @@ namespace FilterCore
         public EntryDataType DataType { get; }
         public int EntryID => throw new NotImplementedException();
         public bool Enabled { get; set; }
-        public List<IFilterLine> LineList { get; set; }
+        public List<IFilterLine> LineList { get; set; } = new List<IFilterLine>();
 
         public IFilterEntry Clone()
         {

@@ -18,7 +18,7 @@ namespace FilterCore
         void Reset();
     }
 
-    public class Filter
+    public class Filter : IFilter
     {
         public Filter(string filePath)
         {
@@ -28,8 +28,30 @@ namespace FilterCore
 
         public Filter(List<IFilterEntry> entryList)
         {
-
+            this.EntryList = entryList;
         }
 
+        public List<IFilterEntry> EntryList { get; set; }
+        public FilterMetaData MetaData { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+
+        public IFilter Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<string> CompileToText()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFilter line)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Reset()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

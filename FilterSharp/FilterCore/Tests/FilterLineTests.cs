@@ -11,10 +11,11 @@ namespace FilterCore.Tests
     public class FilterLineTests
     {
         [Test]
-        public static void FLineAcceptanceTest()
+        public static void FLineBasicTest()
         {
             var line = new FilterLine("Show");
-            //Assert.AreEqual(line.DataType, EntryDataType.Rule);
+            line.Init();
+            Assert.AreEqual(line.LineType, EntryDataType.Rule);
         }
     }
 }

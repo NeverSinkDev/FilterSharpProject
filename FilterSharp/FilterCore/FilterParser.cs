@@ -34,8 +34,8 @@ namespace FilterCore
         private List<IFilterLine> BuildLineList(List<string> stringList)
         {
             var resultList = new List<IFilterLine>(stringList.Count);
-            stringList.ForEach(x => resultList.Add(new FilterLine(x)));
-            resultList.ForEach(x => x.Init());
+            stringList.ForEach(rawLine => resultList.Add(new FilterLine(rawLine)));
+            resultList.ForEach(line => line.Init());
             return resultList;
         }
 
