@@ -26,7 +26,7 @@ namespace Infrastructure.LogManager
             if (instance == null)
             {
                 instance = new MessageHandler();
-            } 
+            }
             instance.WriteLN(text, logLevel); 
         }
         private string GetLLText(LL Loglevel)
@@ -48,17 +48,31 @@ namespace Infrastructure.LogManager
 
             return "Info   "; 
         }
+
         private void WriteLN(string text, LL logLevel)
         {
+
             if (logLevel >= LogLevelThreshold)
+            {
+                foreach (LL localLL in Enum.GetValues(typeof(LL)))
+                {
+                    if (localLL <= logLevel)
+                    {
+                        WriteOutput(text, logLevel, localLL);
+                    }
+                }
+            }
+        }
+         
+        private void WriteOutput(string text, LL logLevel, LL fileLL)
+        {   
             {
                 string output = System.DateTime.Now.ToString()
                     + " : " + new StackFrame(2).GetMethod().Module
                     + " : " + new StackFrame(2).GetMethod().Name;  
 
-                output =  "["+ GetLLText(logLevel) + "] " + output + " : " + text;
+                output =  output + "[" + GetLLText(logLevel) + "]: " + text;
 
-                Console.WriteLine(output);
                  
                 string date =    System.DateTime.Now.Year.ToString() + "."+
                                  System.DateTime.Now.Month.ToString() + "." +
@@ -69,15 +83,9 @@ namespace Infrastructure.LogManager
                 if (!Directory.Exists(fullPath1 + "log"))
                 {
                     Directory.CreateDirectory(fullPath1 + "log");
-                }
-                string filenameall = fullPath1 + "log\\"  + "all " + date + ".txt";
+                } 
 
-                using (StreamWriter sw = File.AppendText(filenameall))
-                {
-                    sw.WriteLine(output); 
-                }
-
-                string filenameLoglevel = fullPath1 + "log\\" + logLevel.ToString() +" " + date + ".txt";
+                string filenameLoglevel = fullPath1 + "log\\" + date +" "  + fileLL.ToString()  + ".txt";
 
                 using (StreamWriter sw = File.AppendText(filenameLoglevel))
                 {
@@ -94,8 +102,7 @@ namespace Infrastructure.LogManager
         [Test]
         public static void LogHndAcceptanceTest()
         {
-             
-
+   
             MessageHandler.Write("Debug", LL.Debug);
             MessageHandler.Write("Warning", LL.Warning);
             MessageHandler.Write("Error", LL.Error);
