@@ -22,6 +22,12 @@ namespace FilterCore.FilterValues
             this.ColorValueList = colors;
         }
 
+        public ColorValue(string value)
+        {
+            var splits = value.Split(' ');
+            this.ColorValueList = splits.Select(x => Int32.Parse(x)).ToList();
+        }
+
         public IFilterValue Clone()
         {
             return new ColorValue(new List<int>(this.ColorValueList));
@@ -37,47 +43,20 @@ namespace FilterCore.FilterValues
             throw new NotImplementedException();
         }
 
-        public void Validate()
+        public bool Validate()
         {
-            throw new NotImplementedException();
+            if (this.ColorValueList.Count < 3 || this.ColorValueList.Count > 4) return false;
+            var r = this.ColorValueList[0] >= 0 && this.ColorValueList[0] <= 255;
+            var g = this.ColorValueList[1] >= 0 && this.ColorValueList[1] <= 255;
+            var b = this.ColorValueList[2] >= 0 && this.ColorValueList[2] <= 255;
+            var a = this.ColorValueList.Count == 3 || (this.ColorValueList[3] >= 0 && this.ColorValueList[3] <= 255);
+            return r && g && b && a;
         }
     }
 
     // CONCRETE COLOR OBJECTS
     // -> simply inheriting from ColorValue
-
-    public class TextColor : ColorValue
-    {
-        public TextColor(List<int> colors) : base(colors)
-        {
-        }
-
-        public TextColor(int r, int g, int b, int? a) : base(r, g, b, a)
-        {
-        }
-    }
-
-    public class BorderColor : ColorValue
-    {
-        public BorderColor(List<int> colors) : base(colors)
-        {
-        }
-
-        public BorderColor(int r, int g, int b, int? a) : base(r, g, b, a)
-        {
-        }
-    }
-
-    public class BackgroundColor : ColorValue
-    {
-        public BackgroundColor(List<int> colors) : base(colors)
-        {
-        }
-
-        public BackgroundColor(int r, int g, int b, int? a) : base(r, g, b, a)
-        {
-        }
-    }
-
-
+    public class TextColor : ColorValue { public TextColor(string value) : base(value) { } }
+    public class BorderColor : ColorValue { public BorderColor(string value) : base(value) { } }
+    public class BackgroundColor : ColorValue { public BackgroundColor(string value) : base(value) { } }
 }

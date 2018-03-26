@@ -18,7 +18,12 @@ namespace FilterCore.FilterValues
             this.Validate();
         }
 
-        public virtual void Validate() { throw new NotImplementedException(); }
+        public OperatorValue(string value)
+        {
+
+        }
+
+        public virtual bool Validate() { throw new NotImplementedException(); }
 
         public string CompileToText()
         {
@@ -44,24 +49,83 @@ namespace FilterCore.FilterValues
 
     public class ItemLevelValue : OperatorValue
     {
-        public ItemLevelValue(int value, string op) : base(value, op) { }
+        public ItemLevelValue(string value) : base(value) { }
 
-        public override void Validate()
+        public override bool Validate()
         {
+            return true;
             // todo
         }
     }
 
     public class DropLevelValue : OperatorValue
     {
-        public DropLevelValue(int value, string op) : base(value, op) { }
+        public DropLevelValue(string value) : base(value) { }
 
-        public override void Validate()
+        public override bool Validate()
         {
+            return true;
             // todo
         }
     }
-    
+
+    public class Quality : OperatorValue
+    {
+        public Quality(string value) : base(value) { }
+
+        public override bool Validate()
+        {
+            // todo
+            return true;
+        }
+    }
+
+    public class Sockets : OperatorValue
+    {
+        public Sockets(string value) : base(value) { }
+
+        public override bool Validate()
+        {
+            // todo
+            return true;
+        }
+    }
+
+    public class LinkedSockets : OperatorValue
+    {
+        public LinkedSockets(string value) : base(value) { }
+
+        public override bool Validate()
+        {
+            // todo
+            return true;
+        }
+    }
+
+    public class Height : OperatorValue
+    {
+        public Height(string value) : base(value) { }
+
+        public override bool Validate()
+        {
+            // todo
+            return true;
+        }
+    }
+
+    public class Width : OperatorValue
+    {
+        public Width(string value) : base(value) { }
+
+        public override bool Validate()
+        {
+            // todo
+            return true;
+        }
+    }
+
+
+
     /* 
      * TODO:
      * ItemLevel

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -47,7 +48,7 @@ namespace FilterCore
             foreach (var line in lineList)
             {
                 // init entry or create new one when finding new Show/Hide ident
-                if (currentEntry == null || (line.Ident == FilterIdent.Show || line.Ident == FilterIdent.Hide))
+                if (currentEntry == null || (line.Ident == "Show" || line.Ident == "Hide"))
                 {
                     currentEntry = new FilterEntry(line.LineType);
                     resultList.Add(currentEntry);
@@ -105,6 +106,7 @@ namespace FilterCore
 
                 // delete endComments from original entry
                 entry.LineList.RemoveRange(entry.LineList.Count - endComments.Count, endComments.Count);
+                resultList.Add(entry);
 
                 // add new entry with the comments
                 var commentEntry = new FilterEntry(endComments.First().LineType)
@@ -113,6 +115,8 @@ namespace FilterCore
                 };
                 resultList.Add(commentEntry);
             }
+
+            Trace.Write($"refactored filter structure from {entryList.Count} to {resultList.Count} entries");
 
             return resultList;
         }

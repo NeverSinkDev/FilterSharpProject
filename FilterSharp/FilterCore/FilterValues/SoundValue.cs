@@ -18,9 +18,18 @@ namespace FilterCore.FilterValues
             this.Validate();
         }
 
-        public void Validate()
+        public SoundValue(string value)
+        {
+            var split = value.Split(' ');
+            if (split.Length > 2) throw new Exception("invalid sound: " + value);
+            this.SoundID = split.First().Trim();
+            this.Volume = Int32.Parse(split[1]);
+        }
+
+        public bool Validate()
         {
             // todo
+            return true;
         }
 
         public string CompileToText()

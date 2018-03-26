@@ -1,17 +1,16 @@
 ﻿using FilterCore.FilterValues;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FilterCore
 {
+    [DebuggerDisplay("{DataType} with {LineList.Count} lines: {this.CompileToText()}")]
     public class FilterEntry : IFilterEntry
     {
-        // test commit
-        // more test commit
-        // whoops
         public FilterEntry(EntryDataType type)
         {
             this.DataType = type;
@@ -29,7 +28,7 @@ namespace FilterCore
 
         public List<string> CompileToText()
         {
-            throw new NotImplementedException();
+            return this.LineList.Select(x => x.CompileToText()).ToList();
         }
 
         public bool Equals(IFilterEntry line)

@@ -14,7 +14,7 @@ namespace FilterCore.FilterValues
         // ALWAYS List<string>, even for numbers
 
 
-        void Validate(); // called whenever you change the value
+        bool Validate(); // called whenever you change the value
         // opBased -> opera + int
         // --> check int range for ident
         // color -> 3 or 4 ints

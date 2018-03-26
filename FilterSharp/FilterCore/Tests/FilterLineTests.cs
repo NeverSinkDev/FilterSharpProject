@@ -15,7 +15,7 @@ namespace FilterCore.Tests
         {
             var line = new FilterLine("Show");
             line.Init();
-            Assert.AreEqual(line.LineType, EntryDataType.Rule);
+            Assert.AreEqual(EntryDataType.Rule, line.LineType);
         }
     }
 }

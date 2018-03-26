@@ -8,78 +8,85 @@ namespace FilterCore
 {
     public static class FilterHelper
     {
-        public static FilterIdent TranslateStringToIdent(string ident)
+
+    }
+
+    public class FilterIdent
+    {
+        public string Ident { get; set; }
+        public bool IsLegitIdent { get; set; } = true;
+
+        public bool HasNoValue { get; set; } = false;
+        public bool HasListValue { get; set; } = false;
+        public bool HasBoolValue { get; set; } = false;
+        public bool HasOperatorValue { get; set; } = false;
+        public bool HasColorValue { get; set; } = false;
+        public bool HasSoundValue { get; set; } = false;
+        public bool HasNumberValue { get; set; } = false;
+
+        public int OrderPosition { get; set; }
+
+        public FilterIdent(string ident)
         {
+            this.Ident = ident;
+
+            // todo: rarity
+            // todo: add performance order positions
+
             switch (ident)
             {
                 case "Show":
-                    return FilterIdent.Show;
-
                 case "Hide":
-                    return FilterIdent.Hide;
-
-                case "ItemLevel":
-                    return FilterIdent.ItemLevel;
-
-                case "DropLevel":
-                    return FilterIdent.DropLevel;
-
-                case "Quality":
-                    return FilterIdent.Quality;
-
-                case "Rarity":
-                    return FilterIdent.Rarity;
-
-                case "Class":
-                    return FilterIdent.Class;
+                case "DisableDropSound":
+                    this.HasNoValue = true;
+                    break;
 
                 case "BaseType":
-                    return FilterIdent.BaseType;
-
-                case "Sockets":
-                    return FilterIdent.Sockets;
-
-                case "LinkedSockets":
-                    return FilterIdent.LinkedSockets;
-
+                case "Class":
                 case "SocketGroup":
-                    return FilterIdent.SocketGroup;
-
-                case "Height":
-                    return FilterIdent.Height;
-
-                case "Width":
-                    return FilterIdent.Width;
-
-                case "Identified":
-                    return FilterIdent.Identified;
-
-                case "Corrupted":
-                    return FilterIdent.Corrupted;
+                    this.HasListValue = true;
+                    break;
 
                 case "SetTextColor":
-                    return FilterIdent.SetTextColor;
-
                 case "SetBorderColor":
-                    return FilterIdent.SetBorderColor;
-
                 case "SetBackgroundColor":
-                    return FilterIdent.SetBackgroundColor;
+                    this.HasColorValue = true;
+                    break;
+
+                case "ItemLevel":
+                case "DropLevel":
+                case "Sockets":
+                case "LinkedSockets":
+                case "Quality":
+                case "Height":
+                case "Width":
+                    this.HasOperatorValue = true;
+                    break;
+
+                case "Identified":
+                case "Corrupted":
+                case "ShaperItem":
+                case "ElderItem":
+                case "ShapedMap":
+                case "ElderMap":
+                    this.HasBoolValue = true;
+                    break;
 
                 case "PlayAlertSound":
-                    return FilterIdent.PlayAlertSound;
+                    this.HasSoundValue = true;
+                    break;
 
                 case "SetFontSize":
-                    return FilterIdent.SetFontSize;
+                    this.HasNumberValue = true;
+                    break;
 
                 default:
-                    throw new Exception("unknown filter ident: " + ident);
+                    this.IsLegitIdent = false;
+                    break;
             }
         }
 
-        /// TODO::: ELDER + SHAPER + SHAPED/ELDERED-MAP!!!
-
-        public static IEnumerable<string> IdentList = new List<string>()
+        public static List<string> IdentList = new List<string>()
         {
             "Show",
         "Hide",
@@ -102,30 +109,6 @@ namespace FilterCore
         "PlayAlertSound",
         "SetFontSize"
         };
-    }
-
-    public enum FilterIdent // todo: sort for performance
-    {
-        Show,
-        Hide,
-        ItemLevel,
-        DropLevel,
-        Quality,
-        Rarity,
-        Class,
-        BaseType,
-        Sockets,
-        LinkedSockets,
-        SocketGroup,
-        Height,
-        Width,
-        Identified,
-        Corrupted,
-        SetTextColor,
-        SetBorderColor,
-        SetBackgroundColor,
-        PlayAlertSound,
-        SetFontSize
     }
 
     public enum Operator

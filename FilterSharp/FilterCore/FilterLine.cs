@@ -10,7 +10,7 @@ namespace FilterCore
 {
     public interface IFilterLine
     {
-        FilterIdent Ident { get; }
+        string Ident { get; }
         IFilterValue Value { get; set; }
         // initialValue object?
         string Comment { get; set; } // maybe list of strings or something. for the commands/tags etc.
@@ -22,15 +22,19 @@ namespace FilterCore
 
         void Init(); // parse input string
 
-        List<string> CompileToText();
+        string CompileToText();
     }
 
+    [DebuggerDisplay("line: {raw}")]
     public class FilterLine : IFilterLine
     {
-        public FilterIdent Ident { get; set; }
+        public string Ident { get; set; }
         public IFilterValue Value { get; set; }
         public string Comment { get; set; }
         public EntryDataType LineType { get; set; }
+
+        private bool enabled;
+        public bool Enabled { get { return enabled; } }
 
         private readonly string raw;
 
@@ -44,7 +48,7 @@ namespace FilterCore
             throw new NotImplementedException();
         }
 
-        public List<string> CompileToText()
+        public string CompileToText()
         {
             throw new NotImplementedException();
         }
@@ -73,9 +77,9 @@ namespace FilterCore
             // enable
             // intro, outro, comment
 
-            raw = raw.Replace("\t", "");
+            var line = raw.Replace("\t", " ").Trim();
 
-            if (raw == "")
+            if (line == "")
             {
                 this.LineType = EntryDataType.Filler;
                 return;
@@ -84,77 +88,88 @@ namespace FilterCore
             // raw can be:            
             // [#] line [# comment]
             // # comment
-
-            var line = this.raw.Trim();
+            
             if (line.First() == '#')
             {
                 // line is disabled or comment
+                this.enabled = false;
 
                 line = line.Substring(1).Trim();
 
                 if (line.Length == 0)
                 {
-                    // line is fillter // empty comment
+                    // empty comment line
+                    this.LineType = EntryDataType.Filler;
                     return;
                 }
             }
 
-            var ident = "";
+            // collect first word
+            var firstWord = "";
             foreach (var c in line)
             {
                 if (c == ' ') break;
-                ident += c;
+                firstWord += c;
             }
+            var ident = new FilterIdent(firstWord);
 
-            if (!FilterHelper.IdentList.Contains(ident))
+            if (!ident.IsLegitIdent)
             {
-                //Trace.Write("----> invalid ident: " + ident + "\n");
                 // line is comment
+                this.ParseComment(line);
                 return;
             }
 
             // line is definitely an actual rule line by now
             this.LineType = EntryDataType.Rule;
-            this.Ident = FilterHelper.TranslateStringToIdent(ident);
+            this.Ident = ident.Ident;
 
-            line = line.Substring(ident.Length).Trim();
+            line = line.Substring(firstWord.Length).Trim();
 
+            // find and parse comment at the end
             if (line.Contains('#'))
             {
                 var index = line.IndexOf('#');
                 var comment = line.Substring(index);
-                // parse comment
+                this.ParseComment(comment);
 
                 line = line.Substring(0, index).Trim();
             }
 
-            if (line.Length == 0)
+            if (ident.HasNoValue)
             {
-                // done
-                return;
-            }
-
-            if (this.Ident == FilterIdent.Show || this.Ident == FilterIdent.Hide)
-            {
-                // parse comment (line)
+                this.ParseComment(line);
                 return;
             }
 
             // "line" is now the value for the ident
-
-            this.ParseValue(line);
+            if (!this.ParseValue(line, ident))
+            {
+                this.MarkAsComment();
+            }
         }
 
-        private void ParseValue(string value)
+        private void ParseComment(string comment)
         {
-            // todo
+        }
 
-            switch (this.Ident)
+        private void MarkAsComment()
+        {
+
+        }
+
+        private bool ParseValue(string value, FilterIdent ident)
+        {
+            var fac = new FilterValueFactory();
+            var val = fac.GenerateFilterValue(ident, value);
+
+            if (val.Validate())
             {
-                case FilterIdent.BaseType:
-                case FilterIdent.Class:
-                    break;
+                this.Value = val;
+                return true;
             }
+
+            return false;
         }
     }
 }

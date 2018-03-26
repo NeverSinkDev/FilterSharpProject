@@ -23,7 +23,7 @@ namespace FilterCore.Tests
             var entryList = parser.ParseToEntryList(stringList.ToList());
             var filter = new Filter(entryList);
 
-            Assert.IsTrue(filter.EntryList.Count > 1000);
+            Assert.IsTrue(filter.EntryList.Count > 400);
         }
     }
 }
