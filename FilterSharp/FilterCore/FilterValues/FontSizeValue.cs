@@ -17,17 +17,18 @@ namespace FilterCore.FilterValues
 
         public IFilterValue Clone()
         {
-            throw new NotImplementedException();
+            return new FontSizeValue(this.Value.ToString());
         }
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            return this.Value.ToString();
         }
 
         public bool Equals(IFilterValue other)
         {
-            throw new NotImplementedException();
+            if (!(other is FontSizeValue)) return false;
+            return (other as FontSizeValue).Value == this.Value;
         }
 
         public bool Validate()
@@ -38,32 +39,33 @@ namespace FilterCore.FilterValues
 
     public class VoidValue : IFilterValue
     {
+        public string Raw { get; set; }
+
         public VoidValue(string value)
         {
-            if (value != "")
-            {
-                throw new Exception("invalid voidValue: " + value);
-            }
+            this.Raw = value;
         }
 
         public IFilterValue Clone()
         {
-            throw new NotImplementedException();
+            return new VoidValue(this.Raw);
         }
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            return "";
         }
 
         public bool Equals(IFilterValue other)
         {
-            throw new NotImplementedException();
+            return other is VoidValue;
         }
 
         public bool Validate()
         {
-            throw new NotImplementedException();
+            var res = this.Raw == "";
+            if (!res) throw new Exception();
+            return res;
         }
     }
 }

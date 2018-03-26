@@ -10,31 +10,29 @@ namespace FilterCore
 {
     public interface IFilterLine
     {
-        string Ident { get; }
+        FilterIdent Ident { get; }
         IFilterValue Value { get; set; }
-        // initialValue object?
         string Comment { get; set; } // maybe list of strings or something. for the commands/tags etc.
         EntryDataType LineType { get; }
+        bool Enabled { get; set; }
 
         bool Equals(IFilterLine line);
         IFilterLine Clone();
-        void Reset();
 
         void Init(); // parse input string
 
         string CompileToText();
+        bool Validate();
     }
 
-    [DebuggerDisplay("line: {raw}")]
+    [DebuggerDisplay("line: {this.CompileToText()}")]
     public class FilterLine : IFilterLine
     {
-        public string Ident { get; set; }
+        public FilterIdent Ident { get; set; }
         public IFilterValue Value { get; set; }
         public string Comment { get; set; }
-        public EntryDataType LineType { get; set; }
-
-        private bool enabled;
-        public bool Enabled { get { return enabled; } }
+        public EntryDataType LineType { get; set; }        
+        public bool Enabled { get; set; }
 
         private readonly string raw;
 
@@ -45,27 +43,34 @@ namespace FilterCore
 
         public IFilterLine Clone()
         {
-            throw new NotImplementedException();
+            var res = new FilterLine(this.raw);
+            res.Init();
+            res.Value = this.Value;
+            return res;
         }
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            if (this.LineType != EntryDataType.Rule)
+            {
+                return "# " + this.Comment;
+            }
+
+            var comment = this.Enabled ? "" : "# ";
+            var intro = this.Ident.Ident == "Show" || this.Ident.Ident == "Hide" ? "" : "\t";
+            return $"{comment}{intro} {this.Ident.Ident} {this.Value.CompileToText()} {this.Comment}";
         }
 
         public bool Equals(IFilterLine line)
         {
-            throw new NotImplementedException();
+            if (this.Ident.Ident != line.Ident.Ident) return false;
+            if (this.Enabled != line.Enabled) return false;
+            return this.Value.Equals(line.Value);
         }
 
         public void Init()
         {
             this.ParseRawString(this.raw);
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
         }
 
         private void ParseRawString(string raw)
@@ -92,7 +97,7 @@ namespace FilterCore
             if (line.First() == '#')
             {
                 // line is disabled or comment
-                this.enabled = false;
+                this.Enabled = false;
 
                 line = line.Substring(1).Trim();
 
@@ -122,7 +127,7 @@ namespace FilterCore
 
             // line is definitely an actual rule line by now
             this.LineType = EntryDataType.Rule;
-            this.Ident = ident.Ident;
+            this.Ident = ident;
 
             line = line.Substring(firstWord.Length).Trim();
 
@@ -138,6 +143,7 @@ namespace FilterCore
 
             if (ident.HasNoValue)
             {
+                this.Value = new VoidValue("");
                 this.ParseComment(line);
                 return;
             }
@@ -151,11 +157,12 @@ namespace FilterCore
 
         private void ParseComment(string comment)
         {
+            this.Comment = comment;
         }
 
         private void MarkAsComment()
         {
-
+            this.LineType = EntryDataType.Comment;
         }
 
         private bool ParseValue(string value, FilterIdent ident)
@@ -170,6 +177,16 @@ namespace FilterCore
             }
 
             return false;
+        }
+
+        public bool Validate()
+        {
+            if (this.LineType == EntryDataType.Rule)
+            {
+                return this.Value.Validate();
+            }
+
+            return true;
         }
     }
 }

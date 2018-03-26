@@ -29,12 +29,16 @@ namespace FilterCore
         public FilterIdent(string ident)
         {
             this.Ident = ident;
-
-            // todo: rarity
+            
             // todo: add performance order positions
 
             switch (ident)
             {
+                case "Rarity":
+                    this.HasListValue = true;
+                    this.HasOperatorValue = true;
+                    break;
+
                 case "Show":
                 case "Hide":
                 case "DisableDropSound":
@@ -86,28 +90,28 @@ namespace FilterCore
             }
         }
 
-        public static List<string> IdentList = new List<string>()
+        public static readonly List<string> IdentList = new List<string>()
         {
             "Show",
-        "Hide",
-        "ItemLevel",
-        "DropLevel",
-        "Quality",
-        "Rarity",
-        "Class",
-        "BaseType",
-        "Sockets",
-        "LinkedSockets",
-        "SocketGroup",
-        "Height",
-        "Width",
-        "Identified",
-        "Corrupted",
-        "SetTextColor",
-        "SetBorderColor",
-        "SetBackgroundColor",
-        "PlayAlertSound",
-        "SetFontSize"
+            "Hide",
+            "ItemLevel",
+            "DropLevel",
+            "Quality",
+            "Rarity",
+            "Class",
+            "BaseType",
+            "Sockets",
+            "LinkedSockets",
+            "SocketGroup",
+            "Height",
+            "Width",
+            "Identified",
+            "Corrupted",
+            "SetTextColor",
+            "SetBorderColor",
+            "SetBackgroundColor",
+            "PlayAlertSound",
+            "SetFontSize"
         };
     }
 

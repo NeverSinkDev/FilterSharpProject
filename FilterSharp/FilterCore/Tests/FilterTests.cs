@@ -24,6 +24,12 @@ namespace FilterCore.Tests
             var filter = new Filter(entryList);
 
             Assert.IsTrue(filter.EntryList.Count > 400);
+
+            filter.Validate();
+            var text = filter.CompileToText();
+            filter.Reset();
+
+            System.IO.File.WriteAllText("C:\\Users\\Tobnac\\Desktop\\myFilter.txt", String.Join("\n", text));
         }
     }
 }

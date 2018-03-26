@@ -9,11 +9,6 @@ namespace FilterCore
 {
     public class FilterParser
     {
-        public List<IFilterEntry> ParseToEntryList(string filePath)
-        {
-            return null;
-        }
-
         public List<IFilterEntry> ParseToEntryList(List<string> stringList)
         {
             // concept similar to Lexer & Parser:
@@ -27,6 +22,7 @@ namespace FilterCore
 
             var lineList = this.BuildLineList(stringList);
             var entryList = this.BuildEntryList(lineList);
+            entryList.ForEach(x => x.Init());
             return entryList;
         }
 
@@ -35,8 +31,10 @@ namespace FilterCore
         private List<IFilterLine> BuildLineList(List<string> stringList)
         {
             var resultList = new List<IFilterLine>(stringList.Count);
+
             stringList.ForEach(rawLine => resultList.Add(new FilterLine(rawLine)));
             resultList.ForEach(line => line.Init());
+
             return resultList;
         }
 
@@ -48,7 +46,7 @@ namespace FilterCore
             foreach (var line in lineList)
             {
                 // init entry or create new one when finding new Show/Hide ident
-                if (currentEntry == null || (line.Ident == "Show" || line.Ident == "Hide"))
+                if (currentEntry == null || (line.LineType == EntryDataType.Rule && (line.Ident.Ident == "Show" || line.Ident.Ident == "Hide")))
                 {
                     currentEntry = new FilterEntry(line.LineType);
                     resultList.Add(currentEntry);
@@ -116,7 +114,7 @@ namespace FilterCore
                 resultList.Add(commentEntry);
             }
 
-            Trace.Write($"refactored filter structure from {entryList.Count} to {resultList.Count} entries");
+            //Trace.Write($"refactored filter structure from {entryList.Count} to {resultList.Count} entries");
 
             return resultList;
         }

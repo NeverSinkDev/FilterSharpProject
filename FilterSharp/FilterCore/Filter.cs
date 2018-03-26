@@ -12,7 +12,6 @@ namespace FilterCore
         FilterMetaData MetaData { get; set; } // strictness, style, version, name, ...
 
         List<string> CompileToText();
-
         bool Equals(IFilter line);
         IFilter Clone();
         void Reset();
@@ -20,19 +19,18 @@ namespace FilterCore
 
     public class Filter : IFilter
     {
-        public Filter(string filePath)
-        {
-            var parser = new FilterParser();
-            //parser.ParseToEntryList()
-        }
+        public List<IFilterEntry> EntryList { get; set; }
+        public FilterMetaData MetaData { get; set; }
 
         public Filter(List<IFilterEntry> entryList)
         {
             this.EntryList = entryList;
         }
 
-        public List<IFilterEntry> EntryList { get; set; }
-        public FilterMetaData MetaData { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
+        public bool Validate()
+        {
+            return this.EntryList.All(x => x.Validate());
+        }
 
         public IFilter Clone()
         {
@@ -41,17 +39,19 @@ namespace FilterCore
 
         public List<string> CompileToText()
         {
-            throw new NotImplementedException();
+            var res = new List<string>(this.EntryList.Count * 5);
+            this.EntryList.ForEach(x => res.AddRange(x.CompileToText()));
+            return res;
         }
 
-        public bool Equals(IFilter line)
+        public bool Equals(IFilter filter)
         {
-            throw new NotImplementedException();
+            return this.EntryList.SequenceEqual(filter.EntryList);
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            this.EntryList.ForEach(x => x.Reset());
         }
     }
 }

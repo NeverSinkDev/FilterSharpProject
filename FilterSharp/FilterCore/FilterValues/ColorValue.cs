@@ -35,12 +35,16 @@ namespace FilterCore.FilterValues
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            return String.Join(" ", this.ColorValueList);
         }
 
         public bool Equals(IFilterValue other)
         {
-            throw new NotImplementedException();
+            if (other is ColorValue)
+            {
+                return (other as ColorValue).ColorValueList.SequenceEqual(this.ColorValueList);
+            }
+            return false;
         }
 
         public bool Validate()

@@ -8,22 +8,75 @@ using System.Threading.Tasks;
 
 namespace FilterCore
 {
-    [DebuggerDisplay("{DataType} with {LineList.Count} lines: {this.CompileToText()}")]
+    [DebuggerDisplay("{DataType} with {LineList.Count} lines: {this.CompileToText()[0]}")]
     public class FilterEntry : IFilterEntry
     {
+        private bool enabled;
+        public bool Enabled
+        {
+            get { return enabled; }
+            set { this.SetEnabled(value); }
+        }
+        public EntryDataType DataType { get; }
+        public List<IFilterLine> LineList { get; set; } = new List<IFilterLine>();
+
+        private List<IFilterLine> InitialLineList;
+
         public FilterEntry(EntryDataType type)
         {
             this.DataType = type;
+        }        
+
+        public List<T> GetAllValues<T>() where T : IFilterValue
+        {
+            return this.LineList.Where(x => x.Value is T).Select(x => x.Value) as List<T>;
         }
 
-        public EntryDataType DataType { get; }
-        public int EntryID => throw new NotImplementedException();
-        public bool Enabled { get; set; }
-        public List<IFilterLine> LineList { get; set; } = new List<IFilterLine>();
+        public T GetValue<T>(int nr = 0) where T : IFilterValue
+        {
+            return (T) this.GetLine<T>(nr).Value;
+        }
+
+        public int GetValueTypeCount<T>()
+        {
+            return this.LineList.Where(x => x.Value is T).Count();
+        }
+
+        public void SetValue<T>(IFilterValue value, int nr = 0) where T : IFilterValue
+        {
+            var line = this.GetLine<T>(nr);
+
+            if (line != null)
+            {
+                line.Value = value;
+                line.Validate();
+                return;
+            }
+
+            line = new FilterLine("")
+            {
+                Value = value,
+                Ident = null
+            };
+        }
+
+        public void RemoveLine<T>(int nr = 0) where T : IFilterValue
+        {
+            this.LineList.Remove(this.GetLine<T>(nr));
+        }
+
+        public void Init()
+        {
+            this.InitialLineList = new List<IFilterLine>(this.LineList);
+        }
 
         public IFilterEntry Clone()
         {
-            throw new NotImplementedException();
+            var res = new FilterEntry(this.DataType);
+            this.LineList.ForEach(x => res.LineList.Add(x.Clone()));
+            this.InitialLineList.ForEach(x => res.InitialLineList.Add(x.Clone()));
+            res.Enabled = this.Enabled;
+            return res;
         }
 
         public List<string> CompileToText()
@@ -31,77 +84,69 @@ namespace FilterCore
             return this.LineList.Select(x => x.CompileToText()).ToList();
         }
 
-        public bool Equals(IFilterEntry line)
+        public bool Equals(IFilterEntry entry)
         {
-            throw new NotImplementedException();
-        }
-
-        public List<T> GetAllValues<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public T GetValue<T>(int nr = 0)
-        {
-            throw new NotImplementedException();
-        }
-
-        public IList<T> GetValueOfType<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public T GetValueOfTypeAt<T>(int nr)
-        {
-            throw new NotImplementedException();
-        }
-
-        public T GetValueOfTypeFirst<T>()
-        {
-            throw new NotImplementedException();
-        }
-
-        public int GetValueTypeCount<T>()
-        {
-            throw new NotImplementedException();
+            if (this.Enabled != entry.Enabled) return false;
+            return this.LineList.SequenceEqual(entry.LineList);
         }
 
         public void Reset()
         {
-            throw new NotImplementedException();
+            this.LineList = new List<IFilterLine>(this.InitialLineList);
+        }
+
+        public bool Validate()
+        {
+            return this.LineList.All(x => x.Validate());
+        }
+
+        public void SetEnabled(bool enable)
+        {
+            this.LineList.Where(x => x.LineType == EntryDataType.Rule).ToList().ForEach(x => x.Enabled = enable);
+            this.enabled = enable;
+        }
+
+        private IFilterLine GetLine<T>(int nr = 0) where T : IFilterValue
+        {
+            foreach (var line in this.LineList)
+            {
+                if (line is T)
+                {
+                    if (nr <= 0)
+                    {
+                        return line;
+                    }
+                    else
+                    {
+                        nr--;
+                    }
+                }
+            }
+
+            return null;
         }
     }
 
     public interface IFilterEntry
     {
         EntryDataType DataType { get; }
-        int EntryID { get; }
         bool Enabled { get; set; }
         List<IFilterLine> LineList { get; }
 
         List<string> CompileToText();
+        void Init();
 
         // setter/getter
-        //T GetValue<T>(FilterIdent ident); // normal getter for type/ident --> unnecessary because overload
-        T GetValue<T>(int nr = 0); // get n-th value of given type
-        List<T> GetAllValues<T>(); // --> get ALL values for e.g. ItemLevel
+        T GetValue<T>(int nr = 0) where T : IFilterValue; // get n-th value of given type
+        List<T> GetAllValues<T>() where T : IFilterValue; // --> get ALL values for e.g. ItemLevel
         int GetValueTypeCount<T>(); // --> how many e.g. ItemLevel lines this entry has
-        // same for set
-        // same for remove
-        // "HasValue" --> ValueTypeCount != 0
-
-        // todo: where to put/save initial values?
-        // e.g. entry has initialValue: Class Currency
-        // now we "entry.RemoveLine(Class);"
-        // if the initValues are in the line or in the valueObj of the line, it would be lost at this point
-
-        IList<T> GetValueOfType<T>();
-        T GetValueOfTypeFirst<T>();
-        T GetValueOfTypeAt<T>(int nr);
+        void SetValue<T>(IFilterValue value, int nr = 0) where T : IFilterValue;
+        void RemoveLine<T>(int nr = 0) where T : IFilterValue;
 
         bool Equals(IFilterEntry line);
         IFilterEntry Clone();
         void Reset();
+        bool Validate();
     }
 
 }

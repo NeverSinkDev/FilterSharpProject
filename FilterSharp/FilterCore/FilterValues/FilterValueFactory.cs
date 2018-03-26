@@ -41,6 +41,7 @@ namespace FilterCore.FilterValues
                 case "ElderMap": return new ElderMap(value);
                 case "PlayAlertSound": return new SoundValue(value);
                 case "SetFontSize": return new FontSizeValue(value);
+                case "Rarity": return new RarityValue(value);
 
                 default:
                     throw new Exception("invalid ident");

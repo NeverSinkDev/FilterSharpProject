@@ -51,17 +51,21 @@ namespace FilterCore.FilterValues
 
         public IFilterValue Clone()
         {
-            throw new NotImplementedException();
+            var res = new ListValue("")
+            {
+                ValueList = new List<string>(this.ValueList)
+            };
+            return res;
         }
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            return String.Join(" ", this.ValueList);
         }
 
         public bool Equals(IFilterValue other)
         {
-            throw new NotImplementedException();
+            return this.ValueList.SequenceEqual((other as ListValue).ValueList);
         }
 
         public bool Validate()

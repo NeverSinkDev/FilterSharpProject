@@ -11,6 +11,8 @@ namespace FilterCore.FilterValues
         public int Value { get; set; }
         public string Operator { get; set; }
 
+        private string raw;
+
         public OperatorValue(int value, string op)
         {
             this.Value = value;
@@ -20,7 +22,25 @@ namespace FilterCore.FilterValues
 
         public OperatorValue(string value)
         {
+            this.raw = value;
 
+            if (value[0] == '<' || value[0] == '>' || value[0] == '=')
+            {
+                // with operator
+                var temp = value.Split(' ');
+                var splits = temp.Where(x => x != "").ToList();
+                if (splits.Count != 2) throw new Exception();
+
+                this.Operator = splits[0];
+                this.Value = Int32.Parse(splits[1]);
+            }
+
+            else
+            {
+                // direct value
+                this.Value = Int32.Parse(value);
+                this.Operator = "=";
+            }
         }
 
         public virtual bool Validate() { throw new NotImplementedException(); }
@@ -38,12 +58,7 @@ namespace FilterCore.FilterValues
 
         public IFilterValue Clone()
         {
-            throw new NotImplementedException();
-        }
-
-        public void Reset()
-        {
-            throw new NotImplementedException();
+            throw new Exception("todo");
         }
     }
 
@@ -53,8 +68,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            return true;
-            // todo
+            return this.Value <= 100 && this.Value >= 1;
         }
     }
 
@@ -64,8 +78,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            return true;
-            // todo
+            return this.Value <= 100 && this.Value >= 1;
         }
     }
 
@@ -75,8 +88,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            // todo
-            return true;
+            return this.Value <= 33 && this.Value >= 0;
         }
     }
 
@@ -86,8 +98,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            // todo
-            return true;
+            return this.Value <= 6 && this.Value >= 1;
         }
     }
 
@@ -97,8 +108,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            // todo
-            return true;
+            return this.Value <= 6 && this.Value >= 1;
         }
     }
 
@@ -108,8 +118,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            // todo
-            return true;
+            return this.Value <= 4 && this.Value >= 1;
         }
     }
 
@@ -119,8 +128,7 @@ namespace FilterCore.FilterValues
 
         public override bool Validate()
         {
-            // todo
-            return true;
+            return this.Value <= 2 && this.Value >= 1;
         }
     }
 

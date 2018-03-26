@@ -33,17 +33,17 @@ namespace FilterCore.FilterValues
 
         public IFilterValue Clone()
         {
-            throw new NotImplementedException();
+            return new BooleanValue(this.StringValue);
         }
 
         public string CompileToText()
         {
-            throw new NotImplementedException();
+            return this.BoolValue ? "True" : "False";
         }
 
         public bool Equals(IFilterValue other)
         {
-            throw new NotImplementedException();
+            return this.BoolValue == (other as BooleanValue).BoolValue;
         }
 
         public bool Validate()

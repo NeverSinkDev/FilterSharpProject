@@ -16,6 +16,10 @@ namespace FilterCore.Tests
             var line = new FilterLine("Show");
             line.Init();
             Assert.AreEqual(EntryDataType.Rule, line.LineType);
+
+            line = new FilterLine("Rarity Rare");
+            line.Init();
+            Assert.AreEqual(EntryDataType.Rule, line.LineType);
         }
     }
 }
