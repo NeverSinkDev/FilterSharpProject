@@ -29,7 +29,7 @@ namespace FilterCore.Tests
             var text = filter.CompileToText();
             filter.Reset();
 
-            System.IO.File.WriteAllText("C:\\Users\\Tobnac\\Desktop\\myFilter.txt", String.Join("\n", text));
+            //System.IO.File.WriteAllText("C:\\Users\\Tobnac\\Desktop\\myFilter.txt", String.Join("\n", text));
         }
     }
 }
