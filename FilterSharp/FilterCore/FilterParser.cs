@@ -49,6 +49,7 @@ namespace FilterCore
                 if (currentEntry == null || (line.LineType == EntryDataType.Rule && (line.Ident.Ident == "Show" || line.Ident.Ident == "Hide")))
                 {
                     currentEntry = new FilterEntry(line.LineType);
+                    currentEntry.Enabled = line.Enabled;
                     resultList.Add(currentEntry);
                 }
 

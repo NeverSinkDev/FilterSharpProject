@@ -22,6 +22,7 @@ namespace FilterCore.FilterValues
                 {
                     case '"':
                         inBrac = !inBrac;
+                        buffer += c;
                         if (!inBrac)
                         {
                             result.Add(buffer);
@@ -33,11 +34,12 @@ namespace FilterCore.FilterValues
                         if (inBrac)
                         {
                             buffer += c;
-                            break;
                         }
-
-                        result.Add(buffer);
-                        buffer = "";
+                        else
+                        {
+                            result.Add(buffer);
+                            buffer = "";
+                        }
                         break;
 
                     default:
@@ -45,6 +47,8 @@ namespace FilterCore.FilterValues
                         break;
                 }
             }
+
+            if (buffer != "") result.Add(buffer);
 
             this.ValueList = result;
         }

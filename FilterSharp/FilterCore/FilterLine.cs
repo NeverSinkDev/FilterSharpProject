@@ -30,9 +30,11 @@ namespace FilterCore
     {
         public FilterIdent Ident { get; set; }
         public IFilterValue Value { get; set; }
-        public string Comment { get; set; }
+        public string Comment { get; set; } = "";
         public EntryDataType LineType { get; set; }        
         public bool Enabled { get; set; }
+        public string Intro { get; set; } = "";
+        public string Outro { get; set; } = "";
 
         private readonly string raw;
 
@@ -51,14 +53,20 @@ namespace FilterCore
 
         public string CompileToText()
         {
-            if (this.LineType != EntryDataType.Rule)
+            if (this.LineType == EntryDataType.Comment)
             {
                 return "# " + this.Comment;
             }
 
+            if (this.LineType == EntryDataType.Filler)
+            {
+                return "";
+            }
+
             var comment = this.Enabled ? "" : "# ";
-            var intro = this.Ident.Ident == "Show" || this.Ident.Ident == "Hide" ? "" : "\t";
-            return $"{comment}{intro} {this.Ident.Ident} {this.Value.CompileToText()} {this.Comment}";
+            //var intro = this.Ident.Ident == "Show" || this.Ident.Ident == "Hide" ? "" : "\t";
+            var intro = this.Intro;
+            return $"{comment}{intro}{this.Ident.Ident} {this.Value.CompileToText()}{this.Outro}{this.Comment}";
         }
 
         public bool Equals(IFilterLine line)
@@ -71,6 +79,19 @@ namespace FilterCore
         public void Init()
         {
             this.ParseRawString(this.raw);
+            this.IdentifiyIntroOutro();
+        }
+
+        private void IdentifiyIntroOutro()
+        {
+            if (this.LineType != EntryDataType.Rule) return;
+
+            var index = this.raw.IndexOf(this.Ident.Ident);
+            this.Intro = this.raw.Substring(0, index);
+
+            //var v = this.Value.CompileToText();
+            //index = this.raw.IndexOf(v) + v.Length;
+            //this.Outro = this.raw.Substring(index);
         }
 
         private void ParseRawString(string raw)
@@ -104,9 +125,13 @@ namespace FilterCore
                 if (line.Length == 0)
                 {
                     // empty comment line
-                    this.LineType = EntryDataType.Filler;
+                    this.LineType = EntryDataType.Comment;
                     return;
                 }
+            }
+            else
+            {
+                this.Enabled = true;
             }
 
             // collect first word
@@ -120,6 +145,8 @@ namespace FilterCore
 
             if (!ident.IsLegitIdent)
             {
+                if (this.Enabled) throw new Exception("invalid ident");
+
                 // line is comment
                 this.ParseComment(line);
                 return;
@@ -157,7 +184,7 @@ namespace FilterCore
 
         private void ParseComment(string comment)
         {
-            this.Comment = comment;
+            this.Comment += comment;
         }
 
         private void MarkAsComment()

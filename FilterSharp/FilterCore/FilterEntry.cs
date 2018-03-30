@@ -11,6 +11,8 @@ namespace FilterCore
     [DebuggerDisplay("{DataType} with {LineList.Count} lines: {this.CompileToText()[0]}")]
     public class FilterEntry : IFilterEntry
     {
+        private List<IFilterLine> initialLineList;
+
         private bool enabled;
         public bool Enabled
         {
@@ -20,21 +22,19 @@ namespace FilterCore
         public EntryDataType DataType { get; }
         public List<IFilterLine> LineList { get; set; } = new List<IFilterLine>();
 
-        private List<IFilterLine> InitialLineList;
-
         public FilterEntry(EntryDataType type)
         {
             this.DataType = type;
-        }        
-
-        public List<T> GetAllValues<T>() where T : IFilterValue
-        {
-            return this.LineList.Where(x => x.Value is T).Select(x => x.Value) as List<T>;
         }
 
         public T GetValue<T>(int nr = 0) where T : IFilterValue
         {
             return (T) this.GetLine<T>(nr).Value;
+        }
+
+        public IEnumerable<T> GetAllValues<T>() where T : IFilterValue
+        {
+            return this.LineList.Where(x => x.Value is T).Select(x => x.Value) as IEnumerable<T>;
         }
 
         public int GetValueTypeCount<T>()
@@ -53,6 +53,7 @@ namespace FilterCore
                 return;
             }
 
+            // todo
             line = new FilterLine("")
             {
                 Value = value,
@@ -65,16 +66,23 @@ namespace FilterCore
             this.LineList.Remove(this.GetLine<T>(nr));
         }
 
+        public void AddLineAsString(string s)
+        {
+            var line = new FilterLine(s);
+            line.Init();
+            this.LineList.Add(line);
+        }
+
         public void Init()
         {
-            this.InitialLineList = new List<IFilterLine>(this.LineList);
-        }
+            this.initialLineList = new List<IFilterLine>(this.LineList);
+        }        
 
         public IFilterEntry Clone()
         {
             var res = new FilterEntry(this.DataType);
             this.LineList.ForEach(x => res.LineList.Add(x.Clone()));
-            this.InitialLineList.ForEach(x => res.InitialLineList.Add(x.Clone()));
+            this.initialLineList.ForEach(x => res.initialLineList.Add(x.Clone()));
             res.Enabled = this.Enabled;
             return res;
         }
@@ -92,7 +100,7 @@ namespace FilterCore
 
         public void Reset()
         {
-            this.LineList = new List<IFilterLine>(this.InitialLineList);
+            this.LineList = new List<IFilterLine>(this.initialLineList);
         }
 
         public bool Validate()
@@ -138,10 +146,11 @@ namespace FilterCore
 
         // setter/getter
         T GetValue<T>(int nr = 0) where T : IFilterValue; // get n-th value of given type
-        List<T> GetAllValues<T>() where T : IFilterValue; // --> get ALL values for e.g. ItemLevel
+        IEnumerable<T> GetAllValues<T>() where T : IFilterValue; // --> get ALL values for e.g. ItemLevel
         int GetValueTypeCount<T>(); // --> how many e.g. ItemLevel lines this entry has
         void SetValue<T>(IFilterValue value, int nr = 0) where T : IFilterValue;
         void RemoveLine<T>(int nr = 0) where T : IFilterValue;
+        void AddLineAsString(string s);
 
         bool Equals(IFilterEntry line);
         IFilterEntry Clone();

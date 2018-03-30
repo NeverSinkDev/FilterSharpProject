@@ -20,6 +20,10 @@ namespace FilterCore.Tests
             line = new FilterLine("Rarity Rare");
             line.Init();
             Assert.AreEqual(EntryDataType.Rule, line.LineType);
+
+            line = new FilterLine("\t Class  Currency");
+            line.Init();
+            Assert.AreEqual(EntryDataType.Rule, line.LineType);
         }
     }
 }
