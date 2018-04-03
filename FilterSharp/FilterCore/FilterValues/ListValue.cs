@@ -37,7 +37,7 @@ namespace FilterCore.FilterValues
                         }
                         else
                         {
-                            result.Add(buffer);
+                            if (buffer != "") result.Add(buffer);
                             buffer = "";
                         }
                         break;

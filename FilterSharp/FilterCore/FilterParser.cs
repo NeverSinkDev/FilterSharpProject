@@ -93,8 +93,8 @@ namespace FilterCore
                     {
                         break;
                     }
-
-                    endComments.Add(line);
+                    
+                    endComments.Insert(0, line);
                 }
 
                 // skip if there were no endComments anyway
