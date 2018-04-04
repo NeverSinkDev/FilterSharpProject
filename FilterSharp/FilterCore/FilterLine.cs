@@ -10,7 +10,7 @@ namespace FilterCore
 {
     public interface IFilterLine
     {
-        FilterIdent Ident { get; }
+        string Ident { get; }
         IFilterValue Value { get; set; }
         string Comment { get; set; } // maybe list of strings or something. for the commands/tags etc.
         EntryDataType LineType { get; }
@@ -28,7 +28,7 @@ namespace FilterCore
     [DebuggerDisplay("line: {this.CompileToText()}")]
     public class FilterLine : IFilterLine
     {
-        public FilterIdent Ident { get; set; }
+        public string Ident { get; set; }
         public IFilterValue Value { get; set; }
         public string Comment { get; set; } = "";
         public EntryDataType LineType { get; set; }        
@@ -55,7 +55,7 @@ namespace FilterCore
         {
             if (this.LineType == EntryDataType.Comment)
             {
-                return "#" + this.Comment;
+                return $"#{this.Intro}{this.Comment}";
             }
 
             else if (this.LineType == EntryDataType.Filler)
@@ -64,9 +64,9 @@ namespace FilterCore
             }
 
             var result = "";
-            result += this.Enabled ? "" : "# ";
+            result += this.Enabled ? "" : "#";
             result += this.Intro;
-            result += this.Ident.Ident;
+            result += this.Ident;
 
             if (this.Comment != "" || this.Outro != "" || !(this.Value is VoidValue))
             {
@@ -81,7 +81,7 @@ namespace FilterCore
 
         public bool Equals(IFilterLine line)
         {
-            if (this.Ident.Ident != line.Ident.Ident) return false;
+            if (this.Ident != line.Ident) return false;
             if (this.Enabled != line.Enabled) return false;
             return this.Value.Equals(line.Value);
         }
@@ -89,14 +89,6 @@ namespace FilterCore
         public void Init()
         {
             this.ParseRawString(this.raw);
-            this.IdentifiyIntroOutro();
-        }
-
-        private void IdentifiyIntroOutro()
-        {
-            if (this.LineType != EntryDataType.Rule) return;
-            var index = this.raw.IndexOf(this.Ident.Ident);
-            this.Intro = this.raw.Substring(0, index);
         }
 
         private void ParseRawString(string raw)
@@ -108,11 +100,14 @@ namespace FilterCore
             {
                 this.LineType = EntryDataType.Filler;
                 return;
-            }        
+            }
+
+            // collect pre-# intro spaces
+            this.Intro += CollectSpaces();
             
-            if (PeekNextChar() == '#')
+            // check for comment
+            if (CheckForChar('#'))
             {
-                GetNextChar();
                 this.Enabled = false;                
 
                 // empty comment line
@@ -128,19 +123,20 @@ namespace FilterCore
                 this.Enabled = true;
             }
 
-            var ident = new FilterIdent(PeekNextWord());
-            if (!ident.IsLegitIdent)
+            // collect post-# intro spaces
+            this.Intro += CollectSpaces();
+
+            // check ident (= first word)
+            var ident = GetNextWord();
+            if (!FilterIdent.IsLegitIdent(ident))
             {
                 if (this.Enabled) throw new Exception("invalid ident");
 
                 // line is comment
                 this.LineType = EntryDataType.Comment;
-                this.ParseComment(GetRemaining());
+                this.ParseComment(ident + GetRemaining());
                 return;
             }
-
-            // "delete/skip" ident
-            GetNextWord();
 
             // line is definitely an actual rule line by now
             this.LineType = EntryDataType.Rule;
@@ -157,18 +153,31 @@ namespace FilterCore
                 remaining = remaining.Substring(0, tempIndex);
             }
 
-            if (ident.HasNoValue)
-            {
+            // catch idents without value
+            if (FilterIdent.IsValuelessIdent(ident))
+            {   
+                // catch invalid comment style and identify comments like "# Hide other stuff"
+                if (remaining != "" && remaining != " " && ident != "DisableDropSound")
+                {
+                    if (this.Enabled) throw new Exception("invalid comment style after valueLess ident");
+
+                    this.LineType = EntryDataType.Comment;
+                    this.ParseComment(ident + remaining);
+                }
+
                 this.Value = new VoidValue("");
-                this.ParseComment(remaining);
                 return;
             }
 
             // "remaining" is now the value for the ident
             if (!this.ParseValue(remaining, ident))
             {
+                // invalid value -> mark as comment
+                this.Comment = ident + remaining;
                 this.MarkAsComment();
             }
+
+            // return;
 
             ////// UTILITY FUNCTIONS //////////
 
@@ -193,43 +202,7 @@ namespace FilterCore
                 return buffer;
             }
 
-            string PeekNextWord()
-            {
-                var buffer = "";
-
-                for (int j = index; j < line.Length; j++)
-                {
-                    if (line[j] == ' ' || line[j] == '\t')
-                    {
-                        // spaces before word -> skip those
-                        if (buffer == "") continue;
-
-                        // space after word -> end of word -> return
-                        break;
-                    }
-
-                    buffer += line[j];
-                }
-
-                return buffer;
-            }
-
-            char GetNextChar()
-            {
-                for (int j = index; index < line.Length; index++)
-                {
-                    if (line[index] == ' ' || line[index] == '\t')
-                    {
-                        continue;
-                    }
-
-                    return line[index];
-                }
-
-                throw new Exception("end of line");
-            }
-
-            char PeekNextChar()
+            bool CheckForChar(char key)
             {
                 for (int j = index; j < line.Length; j++)
                 {
@@ -238,10 +211,13 @@ namespace FilterCore
                         continue;
                     }
 
-                    return line[j];
+                    var res = line[j] == key;
+                    if (res) index = j+1;
+                    return res;
                 }
 
                 throw new Exception("end of line");
+                //return false;
             }
 
             string GetRemaining()
@@ -249,9 +225,28 @@ namespace FilterCore
                 // basically line.Substring(i+1) with failSave...
                 var res = "";
 
-                for (int j = index+1; j < line.Length; j++)
+                for (int j = index; j < line.Length; j++)
                 {
                     res += line[j];
+                }
+
+                return res;
+            }
+
+            string CollectSpaces()
+            {
+                var res = "";
+
+                for (int i = index; index < line.Length; index++)
+                {
+                    if (line[index] == ' ' || line[index] == '\t')
+                    {
+                        res += line[index];
+                    }
+                    else
+                    {
+                        break;
+                    }
                 }
 
                 return res;
@@ -268,7 +263,7 @@ namespace FilterCore
             this.LineType = EntryDataType.Comment;
         }
 
-        private bool ParseValue(string value, FilterIdent ident)
+        private bool ParseValue(string value, string ident)
         {
             // sanatise value string
             var outro = "";
@@ -286,6 +281,9 @@ namespace FilterCore
                     break;
                 }
             }
+
+            // skip space between ident and value
+            value = value.Substring(1);
 
             var fac = new FilterValueFactory();
             var val = fac.GenerateFilterValue(ident, value);

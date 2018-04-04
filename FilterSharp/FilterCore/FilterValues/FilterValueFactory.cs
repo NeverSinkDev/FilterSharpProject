@@ -8,11 +8,6 @@ namespace FilterCore.FilterValues
 {
     public class FilterValueFactory
     {
-        public IFilterValue GenerateFilterValue(FilterIdent ident, string value)
-        {
-            return this.GenerateFilterValue(ident.Ident, value);
-        }
-
         public IFilterValue GenerateFilterValue(string ident, string value)
         {
             switch (ident)
