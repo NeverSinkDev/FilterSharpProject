@@ -12,15 +12,82 @@ namespace FilterCore
     }
 
     public class FilterIdent
-    {               
-        public static bool IsLegitIdent(string ident)
-        {
-            return FilterIdent.IdentList.Contains(ident);
-        }
+    {
+        public string Ident { get; set; }
+        public bool IsLegitIdent { get; set; } = true;
 
-        public static bool IsValuelessIdent(string ident)
+        public bool HasNoValue { get; set; } = false;
+        public bool HasListValue { get; set; } = false;
+        public bool HasBoolValue { get; set; } = false;
+        public bool HasOperatorValue { get; set; } = false;
+        public bool HasColorValue { get; set; } = false;
+        public bool HasSoundValue { get; set; } = false;
+        public bool HasNumberValue { get; set; } = false;
+
+        public int OrderPosition { get; set; }
+
+        public FilterIdent(string ident)
         {
-            return FilterIdent.ValuelessIdents.Contains(ident);
+            this.Ident = ident;
+            
+            // todo: add performance order positions
+
+            switch (ident)
+            {
+                case "Rarity":
+                    this.HasListValue = true;
+                    this.HasOperatorValue = true;
+                    break;
+
+                case "Show":
+                case "Hide":
+                case "DisableDropSound":
+                    this.HasNoValue = true;
+                    break;
+
+                case "BaseType":
+                case "Class":
+                case "SocketGroup":
+                    this.HasListValue = true;
+                    break;
+
+                case "SetTextColor":
+                case "SetBorderColor":
+                case "SetBackgroundColor":
+                    this.HasColorValue = true;
+                    break;
+
+                case "ItemLevel":
+                case "DropLevel":
+                case "Sockets":
+                case "LinkedSockets":
+                case "Quality":
+                case "Height":
+                case "Width":
+                    this.HasOperatorValue = true;
+                    break;
+
+                case "Identified":
+                case "Corrupted":
+                case "ShaperItem":
+                case "ElderItem":
+                case "ShapedMap":
+                case "ElderMap":
+                    this.HasBoolValue = true;
+                    break;
+
+                case "PlayAlertSound":
+                    this.HasSoundValue = true;
+                    break;
+
+                case "SetFontSize":
+                    this.HasNumberValue = true;
+                    break;
+
+                default:
+                    this.IsLegitIdent = false;
+                    break;
+            }
         }
 
         public static readonly List<string> IdentList = new List<string>()
@@ -44,15 +111,8 @@ namespace FilterCore
             "SetBorderColor",
             "SetBackgroundColor",
             "PlayAlertSound",
-            "SetFontSize",
-            "ShaperItem",
-            "ElderItem",
-            "ShapedMap",
-            "ElderMap",
-            "DisableDropSound"
+            "SetFontSize"
         };
-
-        public static readonly List<string> ValuelessIdents = new List<string>() { "Show", "Hide", "DisableDropSound" };
     }
 
     public enum Operator

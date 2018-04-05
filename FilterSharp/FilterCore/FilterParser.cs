@@ -46,9 +46,9 @@ namespace FilterCore
             foreach (var line in lineList)
             {
                 // init entry or create new one when finding new Show/Hide ident
-                if (currentEntry == null || (line.LineType == EntryDataType.Rule && (line.Ident == "Show" || line.Ident == "Hide")))
+                if (currentEntry == null || (line.LineType == EntryDataType.Rule && (line.Ident.Ident == "Show" || line.Ident.Ident == "Hide")))
                 {
-                    currentEntry = FilterEntryFactory.GenerateEntryOfType(line.LineType);
+                    currentEntry = new FilterEntry(line.LineType);
                     currentEntry.Enabled = line.Enabled;
                     resultList.Add(currentEntry);
                 }
@@ -108,7 +108,10 @@ namespace FilterCore
                 resultList.Add(entry);
 
                 // add new entry with the comments
-                var commentEntry = new FilterComment(endComments);
+                var commentEntry = new FilterEntry(endComments.First().LineType)
+                {
+                    LineList = endComments
+                };
                 resultList.Add(commentEntry);
             }
 

@@ -71,7 +71,6 @@
     <Compile Include="FilterLine.cs" />
     <Compile Include="FilterMetaData.cs" />
     <Compile Include="FilterParser.cs" />
-    <Compile Include="FilterRule.cs" />
     <Compile Include="FilterValues\BooleanValue.cs" />
     <Compile Include="FilterValues\ColorValue.cs" />
     <Compile Include="FilterValues\FilterValueFactory.cs" />

@@ -64,8 +64,6 @@ namespace FilterCore.FilterValues
                 this.RarityList = splits;
                 this.type = "list";
             }
-
-            else throw new Exception("invalid rarity value raw string");
         }
 
         public IFilterValue Clone()
