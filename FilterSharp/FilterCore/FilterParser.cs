@@ -69,13 +69,14 @@ namespace FilterCore
             // ---> create and add new entry with those non-Rule lines
 
             var resultList = new List<IFilterEntry>(entryList.Count);
+            //EntryDataType? currentType = null;
 
             for (int i = 0; i < entryList.Count; i++)
             {
                 var entry = entryList[i];
 
                 // skip non-Rule entries
-                // (should probably only be the first one, if any at all)
+                // (should probably only be the first one)
                 if (entry.DataType != EntryDataType.Rule)
                 {
                     resultList.Add(entry);
