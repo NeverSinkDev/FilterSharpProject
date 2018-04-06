@@ -27,9 +27,10 @@ namespace FilterCore.Tests
 
             filter.Validate();
             var text = filter.CompileToText();
-            filter.Reset();
+            filter.Reset();            
 
-            System.IO.File.WriteAllText("C:\\Users\\Tobnac\\Desktop\\myFilter.filter", String.Join("\r\n", text));
+            var path = System.IO.Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "..\\..\\OutputFilter.filter");          
+            System.IO.File.WriteAllText(path, String.Join("\r\n", text));
         }
     }
 }
