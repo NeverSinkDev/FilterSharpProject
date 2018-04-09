@@ -11,10 +11,10 @@ namespace FilterCore
     public interface IFilterEntry
     {
         List<IFilterLine> LineList { get; set; }
-        EntryDataType DataType { get; set; }
+        EntryDataType DataType { get; }
         bool Enabled { get; set; }
 
-        List<string> CompileToText();
+        string CompileToText();
         void Init();
 
         bool Equals(IFilterEntry line);

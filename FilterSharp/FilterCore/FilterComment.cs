@@ -33,9 +33,11 @@ namespace FilterCore
             return new FilterComment(new List<IFilterLine>(this.LineList));
         }
 
-        public List<string> CompileToText()
+        public string CompileToText()
         {
-            return this.LineList.Select(x => x.CompileToText()).ToList();
+            var strB = new StringBuilder(100);
+            this.LineList.ForEach(l => strB.Append(l.CompileToText()));
+            return strB.ToString();
         }
 
         public bool Equals(IFilterEntry line)

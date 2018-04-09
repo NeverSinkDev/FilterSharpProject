@@ -11,7 +11,7 @@ namespace FilterCore
         List<IFilterEntry> EntryList { get; set; }
         FilterMetaData MetaData { get; set; } // strictness, style, version, name, ...
 
-        List<string> CompileToText();
+        string CompileToText();
         bool Equals(IFilter line);
         IFilter Clone();
         void Reset();
@@ -37,11 +37,11 @@ namespace FilterCore
             throw new NotImplementedException();
         }
 
-        public List<string> CompileToText()
+        public string CompileToText()
         {
-            var res = new List<string>(this.EntryList.Count * 5);
-            this.EntryList.ForEach(x => res.AddRange(x.CompileToText()));
-            return res;
+            var strB = new StringBuilder(5000);
+            this.EntryList.ForEach(e => strB.Append(e.CompileToText()));
+            return strB.ToString();
         }
 
         public bool Equals(IFilter filter)

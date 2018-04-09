@@ -53,30 +53,35 @@ namespace FilterCore
 
         public string CompileToText()
         {
+            var result = "";
+
             if (this.LineType == EntryDataType.Comment)
             {
-                return $"#{this.Intro}{this.Comment}";
+                result = $"#{this.Intro}{this.Comment}";
             }
 
             else if (this.LineType == EntryDataType.Filler)
             {
-                return "";
+                result = "";
             }
 
-            var result = "";
-            result += this.Enabled ? "" : "#";
-            result += this.Intro;
-            result += this.Ident;
-
-            if (this.Comment != "" || this.Outro != "" || !(this.Value is VoidValue))
+            else
             {
-                result += " ";
+                result = this.Enabled ? "" : "#";
+                result += this.Intro;
+                result += this.Ident;
+
+                if (this.Comment != "" || this.Outro != "" || !(this.Value is VoidValue))
+                {
+                    result += " ";
+                }
+
+                result += this.Value.CompileToText();
+                result += this.Outro;
+                result += this.Comment;
             }
 
-            result += this.Value.CompileToText();
-            result += this.Outro;
-            result += this.Comment;
-            return result;
+            return result + "\r\n";
         }
 
         public bool Equals(IFilterLine line)

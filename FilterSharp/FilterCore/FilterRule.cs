@@ -11,7 +11,7 @@ namespace FilterCore
     [DebuggerDisplay("{DataType} with {LineList.Count} lines: {this.CompileToText()[0]}")]
     public class FilterRule : IFilterEntry
     {
-        private List<IFilterLine> initialLineList;
+        private IFilterEntry InitialRule;
 
         private bool enabled;
         public bool Enabled
@@ -19,9 +19,8 @@ namespace FilterCore
             get { return enabled; }
             set { this.SetEnabled(value); }
         }
-        public EntryDataType DataType { get; }
+        public EntryDataType DataType { get; } = EntryDataType.Rule;
         public List<IFilterLine> LineList { get; set; } = new List<IFilterLine>();
-        EntryDataType IFilterEntry.DataType { get; set; } = EntryDataType.Rule;
 
         public T GetValue<T>(int nr = 0) where T : IFilterValue
         {
@@ -49,12 +48,15 @@ namespace FilterCore
                 return;
             }
 
-            // todo
             line = new FilterLine("")
             {
                 Value = value,
-                Ident = null
+                Ident = FilterHelper.ConvertValueTypeToStringIdent<T>(), // todo
+                LineType = EntryDataType.Rule,
+                Enabled = this.Enabled
             };
+
+            this.LineList.Add(line);
         }
 
         public void RemoveLine<T>(int nr = 0) where T : IFilterValue
@@ -71,21 +73,26 @@ namespace FilterCore
 
         public void Init()
         {
-            this.initialLineList = new List<IFilterLine>(this.LineList);
+            this.InitialRule = this.Clone();
         }
 
         public IFilterEntry Clone()
         {
-            var res = new FilterRule();
-            this.LineList.ForEach(x => res.LineList.Add(x.Clone()));
-            this.initialLineList.ForEach(x => res.initialLineList.Add(x.Clone()));
-            res.Enabled = this.Enabled;
+            var res = new FilterRule
+            {
+                InitialRule = this.InitialRule?.Clone(),
+                LineList = new List<IFilterLine>(this.LineList),
+                Enabled = this.Enabled
+            };
+            
             return res;
         }
 
-        public List<string> CompileToText()
+        public string CompileToText()
         {
-            return this.LineList.Select(x => x.CompileToText()).ToList();
+            var strB = new StringBuilder(100);
+            this.LineList.ForEach(l => strB.Append(l.CompileToText()));
+            return strB.ToString();
         }
 
         public bool Equals(IFilterEntry entry)
@@ -96,7 +103,8 @@ namespace FilterCore
 
         public void Reset()
         {
-            this.LineList = new List<IFilterLine>(this.initialLineList);
+            this.LineList = new List<IFilterLine>(this.InitialRule.LineList);
+            this.Enabled = this.InitialRule.Enabled;
         }
 
         public bool Validate()

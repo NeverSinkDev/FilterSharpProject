@@ -28,9 +28,11 @@ namespace FilterCore
             return new FilterComment(new List<IFilterLine>(this.LineList));
         }
 
-        public List<string> CompileToText()
+        public string CompileToText()
         {
-            return this.LineList.Select(x => x.CompileToText()).ToList();
+            var res = "";
+            this.LineList.ForEach(l => res += l.CompileToText());
+            return res;
         }
 
         public bool Equals(IFilterEntry line)

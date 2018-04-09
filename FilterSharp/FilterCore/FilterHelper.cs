@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FilterCore.FilterValues;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +9,10 @@ namespace FilterCore
 {
     public static class FilterHelper
     {
-
+        public static string ConvertValueTypeToStringIdent<ValueType>()
+        {
+            return "todocvtsi";
+        }
     }
 
     public class FilterIdent
