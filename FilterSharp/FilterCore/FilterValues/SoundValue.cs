@@ -59,5 +59,7 @@ namespace FilterCore.FilterValues
         {
             throw new NotImplementedException();
         }
+
+        public string GetStringIdent() => "PlayAlertSound";
     }
 }

@@ -56,11 +56,16 @@ namespace FilterCore.FilterValues
             var a = this.ColorValueList.Count == 3 || (this.ColorValueList[3] >= 0 && this.ColorValueList[3] <= 255);
             return r && g && b && a;
         }
+
+        public virtual string GetStringIdent()
+        {
+            throw new Exception();
+        }
     }
 
     // CONCRETE COLOR OBJECTS
     // -> simply inheriting from ColorValue
-    public class TextColor : ColorValue { public TextColor(string value) : base(value) { } }
-    public class BorderColor : ColorValue { public BorderColor(string value) : base(value) { } }
-    public class BackgroundColor : ColorValue { public BackgroundColor(string value) : base(value) { } }
+    public class TextColor : ColorValue { public TextColor(string value) : base(value) { } public override string GetStringIdent() => "SetTextColor"; }
+    public class BorderColor : ColorValue { public BorderColor(string value) : base(value) { } public override string GetStringIdent() => "SetBorderColor"; }
+    public class BackgroundColor : ColorValue { public BackgroundColor(string value) : base(value) { } public override string GetStringIdent() => "SetBackgroundColor"; }
 }

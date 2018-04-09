@@ -50,12 +50,17 @@ namespace FilterCore.FilterValues
         {
             return this.StringValue != null;
         }
+
+        public virtual string GetStringIdent()
+        {
+            throw new Exception();
+        }
     }
 
-    public class Identified : BooleanValue { public Identified(string boolString) : base(boolString) { } }
-    public class Corrupted : BooleanValue { public Corrupted(string boolString) : base(boolString) { } }
-    public class ShaperItem : BooleanValue { public ShaperItem(string boolString) : base(boolString) { } }
-    public class ElderItem : BooleanValue { public ElderItem(string boolString) : base(boolString) { } }
-    public class ShapedMap : BooleanValue { public ShapedMap(string boolString) : base(boolString) { } }
-    public class ElderMap : BooleanValue { public ElderMap(string boolString) : base(boolString) { } }
+    public class Identified : BooleanValue { public Identified(string boolString) : base(boolString) { } public override string GetStringIdent() => "Identified"; }
+    public class Corrupted : BooleanValue { public Corrupted(string boolString) : base(boolString) { } public override string GetStringIdent() => "Corrupted"; }
+    public class ShaperItem : BooleanValue { public ShaperItem(string boolString) : base(boolString) { } public override string GetStringIdent() => "ShaperItem"; }
+    public class ElderItem : BooleanValue { public ElderItem(string boolString) : base(boolString) { } public override string GetStringIdent() => "ElderItem"; }
+    public class ShapedMap : BooleanValue { public ShapedMap(string boolString) : base(boolString) { } public override string GetStringIdent() => "ShapedMap"; }
+    public class ElderMap : BooleanValue { public ElderMap(string boolString) : base(boolString) { } public override string GetStringIdent() => "ElderMap"; }
 }

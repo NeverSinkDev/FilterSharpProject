@@ -12,5 +12,6 @@ namespace FilterCore.FilterValues
         string CompileToText();
         bool Equals(IFilterValue other);
         IFilterValue Clone();
+        string GetStringIdent();
     }
 }

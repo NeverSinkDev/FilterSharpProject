@@ -9,10 +9,6 @@ namespace FilterCore
 {
     public static class FilterHelper
     {
-        public static string ConvertValueTypeToStringIdent<ValueType>()
-        {
-            return "todocvtsi";
-        }
     }
 
     public class FilterIdent

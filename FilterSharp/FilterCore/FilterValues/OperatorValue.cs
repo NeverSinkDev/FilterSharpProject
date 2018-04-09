@@ -60,6 +60,8 @@ namespace FilterCore.FilterValues
         {
             throw new Exception("todo");
         }
+
+        public virtual string GetStringIdent() => throw new Exception(); 
     }
 
     public class ItemLevelValue : OperatorValue
@@ -70,6 +72,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 100 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "ItemLevel";
     }
 
     public class DropLevelValue : OperatorValue
@@ -80,6 +84,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 100 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "DropLevel";
     }
 
     public class Quality : OperatorValue
@@ -90,6 +96,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 33 && this.Value >= 0;
         }
+
+        public override string GetStringIdent() => "Quality";
     }
 
     public class Sockets : OperatorValue
@@ -100,6 +108,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 6 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "Sockets";
     }
 
     public class LinkedSockets : OperatorValue
@@ -110,6 +120,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 6 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "LinkedSockets";
     }
 
     public class Height : OperatorValue
@@ -120,6 +132,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 4 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "Height";
     }
 
     public class Width : OperatorValue
@@ -130,19 +144,7 @@ namespace FilterCore.FilterValues
         {
             return this.Value <= 2 && this.Value >= 1;
         }
+
+        public override string GetStringIdent() => "Width";
     }
-
-
-
-    /* 
-     * TODO:
-     * ItemLevel
-     * DropLevel
-     * Quality
-     * Rarity
-     * Sockets
-     * LinkedSockets
-     * Height
-     * Width
-     */
 }

@@ -76,9 +76,14 @@ namespace FilterCore.FilterValues
         {
             return this.ValueList.Count > 0;
         }
+
+        public virtual string GetStringIdent()
+        {
+            throw new Exception();
+        }
     }
 
-    public class BaseType : ListValue { public BaseType(string value) : base(value) { } }
-    public class Class : ListValue { public Class(string value) : base(value) { } }
-    public class SocketGroup : ListValue { public SocketGroup(string value) : base(value) { } }
+    public class BaseType : ListValue { public BaseType(string value) : base(value) { } public override string GetStringIdent() => "BaseType"; }
+    public class Class : ListValue { public Class(string value) : base(value) { } public override string GetStringIdent() => "Class"; }
+    public class SocketGroup : ListValue { public SocketGroup(string value) : base(value) { } public override string GetStringIdent() => "SocketGroup"; }
 }

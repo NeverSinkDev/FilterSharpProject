@@ -146,5 +146,7 @@ namespace FilterCore.FilterValues
                 throw new Exception();
             }
         }
+
+        public string GetStringIdent() => "Rarity";
     }
 }

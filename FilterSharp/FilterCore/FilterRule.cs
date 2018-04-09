@@ -37,7 +37,7 @@ namespace FilterCore
             return this.LineList.Where(x => x.Value is T).Count();
         }
 
-        public void SetValue<T>(IFilterValue value, int nr = 0) where T : IFilterValue
+        public void SetValue<T>(T value, int nr = 0) where T : IFilterValue
         {
             var line = this.GetLine<T>(nr);
 
@@ -51,7 +51,7 @@ namespace FilterCore
             line = new FilterLine("")
             {
                 Value = value,
-                Ident = FilterHelper.ConvertValueTypeToStringIdent<T>(), // todo
+                Ident = value.GetStringIdent(),
                 LineType = EntryDataType.Rule,
                 Enabled = this.Enabled
             };

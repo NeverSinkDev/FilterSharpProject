@@ -35,6 +35,8 @@ namespace FilterCore.FilterValues
         {
             return this.Value >= 18 && this.Value <= 45;
         }
+
+        public string GetStringIdent() => "SetFontSize";
     }
 
     public class VoidValue : IFilterValue
@@ -66,6 +68,36 @@ namespace FilterCore.FilterValues
             var res = this.Raw == "";
             if (!res) throw new Exception();
             return res;
+        }
+
+        public string GetStringIdent() => "";
+    }
+
+    public class ShowHideValue : IFilterValue
+    {
+        public IFilterValue Clone()
+        {
+            throw new NotImplementedException();
+        }
+
+        public string CompileToText()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Equals(IFilterValue other)
+        {
+            throw new NotImplementedException();
+        }
+
+        public string GetStringIdent()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool Validate()
+        {
+            throw new NotImplementedException();
         }
     }
 }
