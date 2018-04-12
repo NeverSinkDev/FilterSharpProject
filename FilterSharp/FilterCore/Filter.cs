@@ -10,6 +10,7 @@ namespace FilterCore
     {
         List<IFilterEntry> EntryList { get; set; }
         FilterMetaData MetaData { get; set; } // strictness, style, version, name, ...
+        IEnumerable<FilterRule> RuleList { get; set; }
 
         string CompileToText();
         bool Equals(IFilter line);
@@ -21,6 +22,17 @@ namespace FilterCore
     {
         public List<IFilterEntry> EntryList { get; set; }
         public FilterMetaData MetaData { get; set; }
+
+        private IEnumerable<FilterRule> ruleList;
+        public IEnumerable<FilterRule> RuleList
+        {
+            get
+            {
+                if (ruleList == null) ruleList = this.EntryList.Where(x => x is FilterRule) as IEnumerable<FilterRule>;
+                return ruleList;
+            }
+            set { ruleList = value; }
+        }
 
         public Filter(List<IFilterEntry> entryList)
         {
