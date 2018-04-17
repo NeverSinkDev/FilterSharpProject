@@ -170,6 +170,12 @@ namespace FilterCore
                     this.ParseComment(ident + remaining);
                 }
 
+                if (ident == "Show" || ident == "Hide")
+                {
+                    this.Value = new ShowHideValue(ident);
+                    return;
+                }
+
                 this.Value = new VoidValue("");
                 return;
             }

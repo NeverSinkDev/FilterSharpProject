@@ -41,7 +41,9 @@ namespace FilterCore
 
         public bool Validate()
         {
-            return this.EntryList.All(x => x.Validate());
+            var valid = this.EntryList.All(x => x.Validate());
+            if (!valid) throw new Exception("filter is not valid");
+            return valid;
         }
 
         public IFilter Clone()

@@ -66,12 +66,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filter.cs" />
-    <Compile Include="FilterComment.cs" />
-    <Compile Include="FilterEntry.cs" />
-    <Compile Include="FilterFiller.cs" />
-    <Compile Include="FilterHelper.cs" />
+    <Compile Include="Utils\FilterComment.cs" />
+    <Compile Include="Utils\FilterEntry.cs" />
+    <Compile Include="Utils\FilterFiller.cs" />
+    <Compile Include="Utils\FilterHelper.cs" />
     <Compile Include="FilterLine.cs" />
-    <Compile Include="FilterMetaData.cs" />
+    <Compile Include="Utils\FilterMetaData.cs" />
     <Compile Include="FilterParser.cs" />
     <Compile Include="FilterRule.cs" />
     <Compile Include="FilterValues\BooleanValue.cs" />
@@ -82,7 +82,9 @@
     <Compile Include="FilterValues\ListValue.cs" />
     <Compile Include="FilterValues\OperatorValue.cs" />
     <Compile Include="FilterValues\RarityValue.cs" />
+    <Compile Include="FilterValues\ShowHideValue.cs" />
     <Compile Include="FilterValues\SoundValue.cs" />
+    <Compile Include="FilterValues\VoidValue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tests\FilterLineTests.cs" />
     <Compile Include="Tests\FilterTests.cs" />
