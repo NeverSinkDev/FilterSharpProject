@@ -71,7 +71,7 @@ namespace FilterCore
                 result += this.Intro;
                 result += this.Ident;
 
-                if (this.Comment != "" || this.Outro != "" || !(this.Value is VoidValue))
+                if (this.Comment != "" || this.Outro != "" || !(this.Value is VoidValue || this.Value is ShowHideValue))
                 {
                     result += " ";
                 }
