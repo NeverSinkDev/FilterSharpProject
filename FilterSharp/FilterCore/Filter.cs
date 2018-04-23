@@ -48,14 +48,22 @@ namespace FilterCore
 
         public IFilter Clone()
         {
-            throw new NotImplementedException();
+            var newList = this.EntryList.Select(x => x.Clone()).ToList();
+            var result = new Filter(newList);
+            return result;
         }
 
         public string CompileToText()
         {
+            this.SortForPerformance();
             var strB = new StringBuilder(5000);
             this.EntryList.ForEach(e => strB.Append(e.CompileToText()));
             return strB.ToString();
+        }
+
+        public void SortForPerformance()
+        {
+            this.RuleList.ToList().ForEach(x => x.SortForPerformance());
         }
 
         public bool Equals(IFilter filter)

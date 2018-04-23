@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace FilterCore
 {
@@ -10,5 +11,10 @@ namespace FilterCore
         // alt: just use 0 for those
         FilterStrictness Strictness { get; }
         FilterStyle Style { get; }
+
+        internal FilterMetaData Clone()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

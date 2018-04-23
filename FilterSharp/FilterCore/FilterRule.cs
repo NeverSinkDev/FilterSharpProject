@@ -95,6 +95,11 @@ namespace FilterCore
             return strB.ToString();
         }
 
+        public void SortForPerformance()
+        {
+            // todo
+        }
+
         public bool Equals(IFilterEntry entry)
         {
             if (this.Enabled != entry.Enabled) return false;

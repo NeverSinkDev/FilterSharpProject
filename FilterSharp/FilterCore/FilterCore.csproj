@@ -66,6 +66,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Filter.cs" />
+    <Compile Include="FilterLineParser.cs" />
     <Compile Include="Utils\FilterComment.cs" />
     <Compile Include="Utils\FilterEntry.cs" />
     <Compile Include="Utils\FilterFiller.cs" />
